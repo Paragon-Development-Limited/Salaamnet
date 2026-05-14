@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalaamNet — Wi-Fi For Everyone | South Sudan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:        #1A6FB5;
+    --blue-dark:   #0D4F8A;
+    --blue-deeper: #08305A;
+    --blue-light:  #2E8DD4;
+    --blue-pale:   #EBF4FC;
+    --orange:      #E87722;
+    --orange-light:#F59340;
+    --orange-pale: #FEF0E3;
+    --white:       #FFFFFF;
+    --off-white:   #F7F9FC;
+    --text-main:   #0D2137;
+    --text-muted:  #4A6180;
+    --text-light:  #8BA3BA;
+    --border:      rgba(26,111,181,0.1);
+    --border-med:  rgba(26,111,181,0.2);
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Outfit', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    color: var(--text-main);
+    background: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── LOGO SVG ── */
+  .sn-logo-svg { height: 36px; width: auto; }
+  .sn-logo-svg-sm { height: 28px; width: auto; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 4rem;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(13,79,138,0.08); }
+  .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none;
+    font-size: 0.82rem; letter-spacing: 0.06em; font-weight: 400;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--blue); }
+  .nav-cta {
+    background: var(--orange) !important; color: var(--white) !important;
+    padding: 0.5rem 1.25rem !important; border-radius: 4px !important;
+    font-weight: 500 !important; transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--orange-light) !important; color: var(--white) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    background: var(--blue-deeper);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center;
+    padding: 0 4rem; padding-top: 80px;
+  }
+  .hero-wave {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 120px; overflow: hidden;
+  }
+  .hero-wave svg { width: 100%; height: 100%; }
+
+  /* Animated signal rings */
+  .signal-rings {
+    position: absolute; right: 8%; top: 50%;
+    transform: translateY(-50%);
+    width: 420px; height: 420px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ring {
+    position: absolute; border-radius: 50%;
+    border: 1.5px solid rgba(232,119,34,0.25);
+    animation: pulse 3s ease-out infinite;
+  }
+  .ring:nth-child(1) { width: 100px; height: 100px; animation-delay: 0s; border-color: rgba(232,119,34,0.6); }
+  .ring:nth-child(2) { width: 180px; height: 180px; animation-delay: 0.5s; border-color: rgba(232,119,34,0.4); }
+  .ring:nth-child(3) { width: 270px; height: 270px; animation-delay: 1s; border-color: rgba(232,119,34,0.25); }
+  .ring:nth-child(4) { width: 370px; height: 370px; animation-delay: 1.5s; border-color: rgba(232,119,34,0.12); }
+  .ring-center {
+    width: 48px; height: 48px; background: var(--orange);
+    border-radius: 50%; position: absolute; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ring-center svg { color: white; }
+  @keyframes pulse {
+    0% { transform: scale(0.95); opacity: 1; }
+    70% { transform: scale(1.05); opacity: 0.7; }
+    100% { transform: scale(0.95); opacity: 1; }
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 620px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: rgba(232,119,34,0.15); border: 1px solid rgba(232,119,34,0.3);
+    padding: 0.35rem 0.85rem; border-radius: 100px;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--orange-light); font-weight: 500; margin-bottom: 1.75rem;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+  .hero-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+  h1 {
+    font-family: var(--font-body); font-weight: 700;
+    font-size: clamp(2.8rem, 5.5vw, 5rem); line-height: 1.1;
+    color: var(--white); margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s ease 0.35s both;
+  }
+  h1 span { color: var(--orange); }
+  .hero-sub {
+    font-size: 1rem; color: rgba(255,255,255,0.6); font-weight: 300;
+    line-height: 1.8; max-width: 500px; margin-bottom: 2.5rem;
+    animation: fadeUp 0.7s ease 0.5s both;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; align-items: center;
+    animation: fadeUp 0.6s ease 0.6s both;
+  }
+  .btn-orange {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--orange); color: var(--white);
+    padding: 0.85rem 1.75rem; font-size: 0.85rem; font-weight: 600;
+    border-radius: 4px; text-decoration: none; border: none; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .btn-orange:hover { background: var(--orange-light); transform: translateY(-1px); }
+  .btn-ghost-white {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1.5px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8);
+    padding: 0.85rem 1.75rem; font-size: 0.85rem; font-weight: 400;
+    border-radius: 4px; text-decoration: none; transition: all 0.2s;
+  }
+  .btn-ghost-white:hover { border-color: rgba(255,255,255,0.6); color: var(--white); }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 3.5rem;
+    padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+    animation: fadeUp 0.6s ease 0.7s both;
+  }
+  .hero-stat-num {
+    font-size: 1.9rem; font-weight: 700; color: var(--white); display: block; line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 0.3rem;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+
+  /* ── SERVICES STRIP ── */
+  .services-strip {
+    background: var(--orange); padding: 1rem 4rem;
+    display: flex; gap: 3rem; align-items: center; overflow-x: auto;
+  }
+  .service-strip-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.78rem; font-weight: 600; color: var(--white);
+    white-space: nowrap; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .strip-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.3); flex-shrink: 0; }
+
+  /* ── SECTION SHARED ── */
+  .section-tag {
+    font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--orange); font-weight: 600; margin-bottom: 0.85rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; background: var(--orange); border-radius: 2px; }
+  h2 {
+    font-family: var(--font-body); font-weight: 700;
+    font-size: clamp(1.9rem, 3vw, 2.75rem); line-height: 1.15; color: var(--text-main);
+  }
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── ABOUT ── */
+  #about {
+    background: var(--off-white); padding: 7rem 4rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+  #about h2 { margin-bottom: 1.25rem; }
+  #about .lead {
+    font-size: 0.95rem; color: var(--text-muted); line-height: 1.9;
+    font-weight: 300; margin-bottom: 1.25rem;
+  }
+  .vision-mission {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;
+  }
+  .vm-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.25rem;
+    border-top: 3px solid var(--orange);
+  }
+  .vm-title {
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--orange); font-weight: 600; margin-bottom: 0.5rem;
+  }
+  .vm-text { font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; font-weight: 300; }
+
+  .about-visual-blocks {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  .vis-block {
+    border-radius: 8px; padding: 1.75rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .vis-block.blue { background: var(--blue); }
+  .vis-block.blue-dark { background: var(--blue-dark); }
+  .vis-block.orange { background: var(--orange); }
+  .vis-block.light { background: var(--white); border: 1px solid var(--border); }
+  .vis-block-num {
+    font-size: 2.5rem; font-weight: 700; line-height: 1;
+    color: var(--white);
+  }
+  .vis-block.light .vis-block-num { color: var(--blue); }
+  .vis-block-label {
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.65);
+  }
+  .vis-block.light .vis-block-label { color: var(--text-muted); }
+  .vis-block-wide {
+    grid-column: 1/-1; background: var(--blue-deeper);
+    border-radius: 8px; padding: 1.25rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .vis-block-wide-text { font-size: 0.82rem; color: rgba(255,255,255,0.7); font-weight: 300; }
+  .vis-block-wide-badge {
+    background: var(--orange); color: var(--white);
+    padding: 0.35rem 0.85rem; border-radius: 100px;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+
+  /* ── SERVICES ── */
+  #services { background: var(--white); padding: 7rem 4rem; }
+  .services-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3rem;
+  }
+  .services-note {
+    font-size: 0.85rem; color: var(--text-muted); font-weight: 300;
+    max-width: 260px; line-height: 1.7; text-align: right;
+  }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+  }
+  .service-card {
+    background: var(--off-white); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem;
+    position: relative; overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    display: flex; flex-direction: column; gap: 0.85rem;
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(26,111,181,0.1);
+    border-color: var(--border-med);
+  }
+  .service-card:hover .service-icon { background: var(--blue); color: var(--white); }
+  .service-icon {
+    width: 44px; height: 44px; background: var(--blue-pale);
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; color: var(--blue);
+    transition: background 0.25s, color 0.25s;
+  }
+  .service-name {
+    font-size: 1rem; font-weight: 600; color: var(--text-main);
+  }
+  .service-desc {
+    font-size: 0.8rem; color: var(--text-muted); line-height: 1.75;
+    font-weight: 300; flex: 1;
+  }
+  .service-num {
+    position: absolute; top: 1rem; right: 1.25rem;
+    font-size: 3rem; font-weight: 700; color: rgba(26,111,181,0.05); line-height: 1;
+  }
+
+  /* ── PRODUCTS ── */
+  #products { background: var(--blue-deeper); padding: 7rem 4rem; }
+  #products .section-tag { color: var(--orange-light); }
+  #products .section-tag::before { background: var(--orange-light); }
+  #products h2 { color: var(--white); margin-bottom: 0.5rem; }
+  #products .sub { color: rgba(255,255,255,0.5); font-size: 0.95rem; font-weight: 300; margin-bottom: 3rem; }
+  .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; }
+  .product-card {
+    background: var(--blue-deeper); padding: 2rem 1.5rem;
+    display: flex; flex-direction: column; gap: 1rem;
+    transition: background 0.25s;
+  }
+  .product-card:hover { background: rgba(255,255,255,0.04); }
+  .product-icon {
+    width: 40px; height: 40px; background: rgba(232,119,34,0.15);
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; color: var(--orange-light);
+  }
+  .product-name { font-size: 0.95rem; font-weight: 600; color: var(--white); line-height: 1.3; }
+  .product-desc { font-size: 0.78rem; color: rgba(255,255,255,0.4); line-height: 1.7; font-weight: 300; }
+
+  /* ── COVERAGE ── */
+  #coverage { background: var(--off-white); padding: 7rem 4rem; }
+  .coverage-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+  #coverage h2 { margin-bottom: 1.25rem; }
+  #coverage .lead {
+    font-size: 0.95rem; color: var(--text-muted); line-height: 1.9;
+    font-weight: 300; margin-bottom: 2rem;
+  }
+  .coverage-features { display: flex; flex-direction: column; gap: 0.75rem; }
+  .cov-feature {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    padding: 0.85rem 1rem; background: var(--white);
+    border: 1px solid var(--border); border-radius: 6px;
+    border-left: 3px solid var(--blue);
+  }
+  .cov-icon { color: var(--blue); flex-shrink: 0; margin-top: 1px; }
+  .cov-title { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+  .cov-text { font-size: 0.76rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; margin-top: 0.15rem; }
+  .coverage-map-placeholder {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 10px; padding: 2rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 360px; position: relative; overflow: hidden;
+  }
+  .map-bg {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: radial-gradient(circle, var(--blue) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .map-pin {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  }
+  .map-pin-icon {
+    width: 56px; height: 56px; background: var(--blue);
+    border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(26,111,181,0.3);
+  }
+  .map-pin-icon svg { transform: rotate(45deg); color: white; }
+  .map-pulse {
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 2px solid rgba(26,111,181,0.3);
+    position: absolute; animation: mapPulse 2s ease-out infinite;
+  }
+  .map-pulse-2 { animation-delay: 1s; }
+  @keyframes mapPulse {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+  .map-label {
+    position: relative; z-index: 1; margin-top: 2rem;
+    font-size: 1rem; font-weight: 600; color: var(--blue);
+  }
+  .map-sublabel { font-size: 0.78rem; color: var(--text-muted); font-weight: 300; }
+  .coverage-badges {
+    display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; justify-content: center;
+  }
+  .cov-badge {
+    background: var(--blue-pale); border: 1px solid var(--border-med);
+    padding: 0.3rem 0.75rem; border-radius: 100px;
+    font-size: 0.7rem; color: var(--blue); font-weight: 500;
+  }
+
+  /* ── MANAGEMENT ── */
+  #management { background: var(--white); padding: 7rem 4rem; }
+  .mgmt-inner {
+    display: grid; grid-template-columns: 1fr 380px; gap: 5rem; align-items: center;
+  }
+  #management h2 { margin-bottom: 1.25rem; }
+  #management .lead {
+    font-size: 0.95rem; color: var(--text-muted); line-height: 1.9;
+    font-weight: 300; margin-bottom: 2rem;
+  }
+  .mgmt-card {
+    background: var(--blue-deeper); border-radius: 10px; overflow: hidden;
+  }
+  .mgmt-card-top {
+    padding: 2rem; background: var(--blue-dark);
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .mgmt-initials {
+    width: 56px; height: 56px; background: var(--orange);
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; font-weight: 700; color: var(--white);
+  }
+  .mgmt-name { font-size: 1.35rem; font-weight: 700; color: var(--white); line-height: 1.2; }
+  .mgmt-title { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange-light); }
+  .mgmt-card-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .mgmt-cred {
+    display: flex; align-items: flex-start; gap: 0.65rem;
+    padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .mgmt-cred:last-child { border-bottom: none; }
+  .mgmt-cred-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 5px; }
+  .mgmt-cred-text { font-size: 0.76rem; color: rgba(255,255,255,0.55); font-weight: 300; line-height: 1.55; }
+  .mgmt-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 2rem;
+  }
+  .mgmt-stat {
+    padding: 1.25rem; text-align: center; background: var(--off-white);
+    border-right: 1px solid var(--border);
+  }
+  .mgmt-stat:last-child { border-right: none; }
+  .mgmt-stat-num { font-size: 1.8rem; font-weight: 700; color: var(--blue); display: block; line-height: 1; }
+  .mgmt-stat-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); margin-top: 0.25rem; }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--blue); padding: 7rem 4rem; position: relative; overflow: hidden; }
+  .contact-wave {
+    position: absolute; top: 0; left: 0; right: 0; transform: rotate(180deg);
+  }
+  .contact-wave svg { width: 100%; }
+  .contact-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    position: relative; z-index: 1;
+  }
+  #contact .section-tag { color: var(--orange-light); }
+  #contact .section-tag::before { background: var(--orange-light); }
+  #contact h2 { color: var(--white); margin-bottom: 1rem; }
+  #contact .lead { color: rgba(255,255,255,0.6); font-size: 0.95rem; font-weight: 300; line-height: 1.85; margin-bottom: 2rem; }
+  .contact-links { display: flex; flex-direction: column; gap: 0.75rem; }
+  .contact-link {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.25rem; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+    text-decoration: none; transition: background 0.2s, border-color 0.2s;
+  }
+  .contact-link:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+  .contact-link-icon {
+    width: 36px; height: 36px; background: rgba(232,119,34,0.2);
+    border-radius: 6px; display: flex; align-items: center;
+    justify-content: center; color: var(--orange-light); flex-shrink: 0;
+  }
+  .contact-link-label { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); display: block; margin-bottom: 0.15rem; }
+  .contact-link-value { font-size: 0.9rem; color: rgba(255,255,255,0.85); font-weight: 400; }
+  .contact-form {
+    background: var(--white); border-radius: 10px; padding: 2rem;
+  }
+  .form-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 500;
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; background: var(--off-white); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0.7rem 0.9rem; color: var(--text-main);
+    font-family: var(--font-body); font-size: 0.88rem; font-weight: 300;
+    outline: none; transition: border-color 0.2s; resize: none;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: var(--blue);
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-light); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .form-submit {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    width: 100%; background: var(--orange); color: var(--white);
+    padding: 0.85rem; font-size: 0.82rem; font-weight: 600;
+    border: none; cursor: pointer; border-radius: 6px;
+    transition: background 0.2s; font-family: var(--font-body); margin-top: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+  .form-submit:hover { background: var(--orange-light); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--blue-deeper); padding: 2rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-tagline { font-size: 0.75rem; color: rgba(255,255,255,0.3); font-weight: 300; margin-top: 0.35rem; }
+  .footer-nav { display: flex; gap: 2rem; }
+  .footer-nav a { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+  .footer-nav a:hover { color: var(--orange-light); }
+  .footer-copy { font-size: 0.68rem; color: rgba(255,255,255,0.2); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 960px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero { padding: 6rem 1.5rem 5rem; }
+    .signal-rings { display: none; }
+    #about, .coverage-inner, .mgmt-inner, .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+    #about, #services, #products, #coverage, #management, #contact { padding: 5rem 1.5rem; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
+    .services-strip { padding: 1rem 1.5rem; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2rem 1.5rem; }
+    .footer-nav { flex-wrap: wrap; justify-content: center; }
+    .form-row { grid-template-columns: 1fr; }
+    .services-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .about-visual-blocks { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG LOGO DEFINITION (reusable) -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="salaamnet-logo" viewBox="0 0 220 48">
+    <!-- Wi-Fi arc icon -->
+    <g transform="translate(4, 4)">
+      <!-- Outer arc -->
+      <path d="M0 20 Q20 0 40 20" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round" opacity="0.4"/>
+      <!-- Middle arc -->
+      <path d="M6 24 Q20 10 34 24" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round" opacity="0.7"/>
+      <!-- Inner arc -->
+      <path d="M12 28 Q20 20 28 28" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round"/>
+      <!-- Dot -->
+      <circle cx="20" cy="35" r="3.5" fill="#E87722"/>
+    </g>
+    <!-- SALAAM text -->
+    <text x="52" y="22" font-family="Outfit, sans-serif" font-weight="700" font-size="20" fill="#1A6FB5" letter-spacing="1">SALAAM</text>
+    <!-- NET text -->
+    <text x="52" y="40" font-family="Outfit, sans-serif" font-weight="300" font-size="14" fill="#1A6FB5" letter-spacing="4">NET</text>
+    <!-- Tagline -->
+    <text x="54" y="52" font-family="Outfit, sans-serif" font-weight="400" font-size="7.5" fill="#E87722" letter-spacing="2.5">WI-FI FOR EVERYONE</text>
+  </symbol>
+</svg>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" style="text-decoration:none; display:flex; align-items:center;">
+    <svg class="sn-logo-svg" viewBox="0 0 220 58" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(4, 4)">
+        <path d="M0 20 Q20 0 40 20" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round" opacity="0.4"/>
+        <path d="M6 24 Q20 10 34 24" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round" opacity="0.7"/>
+        <path d="M12 28 Q20 20 28 28" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="20" cy="35" r="3.5" fill="#E87722"/>
+      </g>
+      <text x="52" y="22" font-family="Outfit, sans-serif" font-weight="700" font-size="20" fill="#1A6FB5" letter-spacing="1">SALAAM</text>
+      <text x="52" y="40" font-family="Outfit, sans-serif" font-weight="300" font-size="14" fill="#1A6FB5" letter-spacing="4">NET</text>
+      <text x="54" y="52" font-family="Outfit, sans-serif" font-weight="400" font-size="7.5" fill="#E87722" letter-spacing="2.5">WI-FI FOR EVERYONE</text>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#coverage">Coverage</a></li>
+    <li><a href="#management">Management</a></li>
+    <li><a href="#contact" class="nav-cta">Connect Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="signal-rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring-center">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">
+      <div class="hero-tag-dot"></div>
+      Licensed ISP · South Sudan · 4G LTE Active
+    </div>
+
+    <!-- Hero Logo -->
+    <svg style="height:56px; width:auto; margin-bottom:1.5rem; display:block;" viewBox="0 0 220 58" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(4, 4)">
+        <path d="M0 20 Q20 0 40 20" fill="none" stroke="#E87722" stroke-width="5" stroke-linecap="round" opacity="0.4"/>
+        <path d="M6 24 Q20 10 34 24" fill="none" stroke="#E87722" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+        <path d="M12 28 Q20 20 28 28" fill="none" stroke="#E87722" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="20" cy="35" r="4" fill="#E87722"/>
+      </g>
+      <text x="52" y="22" font-family="Outfit, sans-serif" font-weight="700" font-size="20" fill="#FFFFFF" letter-spacing="1">SALAAM</text>
+      <text x="52" y="40" font-family="Outfit, sans-serif" font-weight="300" font-size="14" fill="rgba(255,255,255,0.7)" letter-spacing="4">NET</text>
+      <text x="54" y="52" font-family="Outfit, sans-serif" font-weight="400" font-size="7.5" fill="#E87722" letter-spacing="2.5">WI-FI FOR EVERYONE</text>
+    </svg>
+
+    <h1>Connecting<br><span>South Sudan</span><br>One Signal at a Time</h1>
+    <p class="hero-sub">Fast, reliable, and affordable internet for homes, businesses, and communities across South Sudan. A wholly-owned subsidiary of Paragon Development Limited.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-orange">
+        Get Connected
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#services" class="btn-ghost-white">View Services</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-num">4G</span>
+        <span class="hero-stat-label">LTE Network</span>
+      </div>
+      <div>
+        <span class="hero-stat-num">24/7</span>
+        <span class="hero-stat-label">Technical Support</span>
+      </div>
+      <div>
+        <span class="hero-stat-num">ISP</span>
+        <span class="hero-stat-label">Licensed Operator</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 C360,120 1080,0 1440,60 L1440,120 L0,120 Z" fill="#F7F9FC"/>
+    </svg>
+  </div>
+</section>
+
+<!-- SERVICES STRIP -->
+<div class="services-strip">
+  <div class="service-strip-item">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0"/></svg>
+    High Speed Internet
+  </div>
+  <div class="strip-divider"></div>
+  <div class="service-strip-item">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+    Fiber Optic Broadband
+  </div>
+  <div class="strip-divider"></div>
+  <div class="service-strip-item">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+    IT Network Security
+  </div>
+  <div class="strip-divider"></div>
+  <div class="service-strip-item">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/></svg>
+    Cloud Computing
+  </div>
+  <div class="strip-divider"></div>
+  <div class="service-strip-item">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3"/></svg>
+    Network Infrastructure
+  </div>
+  <div class="strip-divider"></div>
+  <div class="service-strip-item">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5z"/></svg>
+    ICT Training
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-content reveal">
+    <div class="section-tag">About SalaamNet</div>
+    <h2>Wi-Fi for Everyone,<br>Everywhere in South Sudan</h2>
+    <p class="lead">SalaamNet is a wholly-owned subsidiary of Paragon Development Limited, providing fixed and wireless internet services across the Republic of South Sudan. We currently operate 4G LTE mobile broadband in Juba, with active expansion plans for the rest of the country.</p>
+    <p class="lead">We are driven by a strong belief in South Sudan's future as an emerging economy and in the innovative, resilient spirit of its people.</p>
+    <div class="vision-mission">
+      <div class="vm-card">
+        <div class="vm-title">Our Vision</div>
+        <div class="vm-text">Truly fast wireless internet of superior quality at affordable rates, available to the broadest spectrum of users across South Sudan.</div>
+      </div>
+      <div class="vm-card">
+        <div class="vm-title">Our Mission</div>
+        <div class="vm-text">A fully connected South Sudan, with digital access available to all segments of society at an affordable price with optimal quality and reliability.</div>
+      </div>
+    </div>
+  </div>
+  <div class="about-visual-blocks reveal">
+    <div class="vis-block blue">
+      <div class="vis-block-num">4G</div>
+      <div class="vis-block-label">LTE Active in Juba</div>
+    </div>
+    <div class="vis-block orange">
+      <div class="vis-block-num">24/7</div>
+      <div class="vis-block-label">Technical Support</div>
+    </div>
+    <div class="vis-block light">
+      <div class="vis-block-num">ISP</div>
+      <div class="vis-block-label">Licensed by NCA</div>
+    </div>
+    <div class="vis-block blue-dark">
+      <div class="vis-block-num">6+</div>
+      <div class="vis-block-label">Service Categories</div>
+    </div>
+    <div class="vis-block-wide">
+      <div class="vis-block-wide-text">A subsidiary of Paragon Development Limited, incorporated in Juba, South Sudan.</div>
+      <div class="vis-block-wide-badge">paragonafrica.com →</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div>
+      <div class="section-tag">Our Services</div>
+      <h2>Everything You Need to Stay Connected</h2>
+    </div>
+    <p class="services-note">From home broadband to enterprise infrastructure — we have a solution for every connectivity need.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
+      </div>
+      <div class="service-name">High Speed Internet</div>
+      <div class="service-desc">Corporate, urban hotspot, and remote internet services. Reliable, low-latency connectivity designed to keep your operations running smoothly around the clock.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">02</div>
+      <div class="service-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      </div>
+      <div class="service-name">Fiber Optic Broadband</div>
+      <div class="service-desc">Lightning-fast speeds over advanced fiber infrastructure. Ideal for streaming, heavy business use, and bandwidth-intensive operations. Packages for home users and large enterprises.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">03</div>
+      <div class="service-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+      </div>
+      <div class="service-name">IT Network Security</div>
+      <div class="service-desc">Comprehensive protection including firewall management, intrusion detection, malware protection, and data encryption. Regular audits to keep your network secure at all times.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">04</div>
+      <div class="service-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/></svg>
+      </div>
+      <div class="service-name">Cloud Computing</div>
+      <div class="service-desc">IaaS, PaaS, and SaaS solutions with flexible file, object, and block storage. Scalable cloud resources accessible over the internet with flexible payment plans.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">05</div>
+      <div class="service-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582"/></svg>
+      </div>
+      <div class="service-name">Network Infrastructure</div>
+      <div class="service-desc">End-to-end network design, planning, implementation, and ongoing maintenance. Scalable and flexible solutions built to adapt as your network needs evolve.</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">06</div>
+      <div class="service-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5z"/></svg>
+      </div>
+      <div class="service-name">ICT Training &amp; Capacity</div>
+      <div class="service-desc">Classroom, online, and customised training across software applications, cybersecurity, network infrastructure, and project management. Follow-up coaching included.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="reveal">
+    <div class="section-tag">Products &amp; Platforms</div>
+    <h2>Our Product Lineup</h2>
+    <p class="sub">Four platforms built to bring connectivity to every corner of South Sudan.</p>
+  </div>
+  <div class="products-grid reveal">
+    <div class="product-card">
+      <div class="product-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
+      </div>
+      <div class="product-name">Routers, MiFis &amp; Dongles</div>
+      <div class="product-desc">SalaamNet data SIM-powered devices for personal and mobile broadband use across South Sudan.</div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75"/></svg>
+      </div>
+      <div class="product-name">City Wi-Fi Network</div>
+      <div class="product-desc">Urban hotspot infrastructure delivering affordable, seamless connectivity in cafes, restaurants, and public spaces across Juba.</div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/></svg>
+      </div>
+      <div class="product-name">Internet Cafes</div>
+      <div class="product-desc">SalaamNet-branded internet café facilities providing community access points for digital connectivity in underserved areas.</div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489"/></svg>
+      </div>
+      <div class="product-name">SalaamNet Blackboard</div>
+      <div class="product-desc">An e-Education platform bringing digital learning resources and online education tools to students and institutions across South Sudan.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COVERAGE -->
+<section id="coverage">
+  <div class="coverage-inner">
+    <div class="reveal">
+      <div class="section-tag">Coverage</div>
+      <h2>Active in Juba.<br>Expanding Nationwide.</h2>
+      <p class="lead">SalaamNet currently provides 4G LTE mobile broadband across Juba, the capital of South Sudan. Our expansion roadmap targets all major urban centres and remote communities across the country.</p>
+      <div class="coverage-features">
+        <div class="cov-feature">
+          <div class="cov-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <div class="cov-title">4G LTE — Juba</div>
+            <div class="cov-text">Active high-speed mobile broadband coverage across the capital city.</div>
+          </div>
+        </div>
+        <div class="cov-feature">
+          <div class="cov-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <div class="cov-title">Corporate &amp; Urban Hotspots</div>
+            <div class="cov-text">Dedicated enterprise connectivity and public hotspot nodes across the city.</div>
+          </div>
+        </div>
+        <div class="cov-feature">
+          <div class="cov-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <div class="cov-title">Nationwide Expansion — In Progress</div>
+            <div class="cov-text">Rolling out services to additional cities and remote communities across South Sudan.</div>
+          </div>
+        </div>
+        <div class="cov-feature">
+          <div class="cov-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <div class="cov-title">Remote Internet Services</div>
+            <div class="cov-text">Affordable connectivity solutions for areas where traditional internet is not available.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="coverage-map-placeholder reveal">
+      <div class="map-bg"></div>
+      <div class="map-pulse"></div>
+      <div class="map-pulse map-pulse-2"></div>
+      <div class="map-pin">
+        <div class="map-pin-icon">
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+        </div>
+      </div>
+      <div class="map-label">Juba, South Sudan</div>
+      <div class="map-sublabel">Primary Service Area · 4G LTE Active</div>
+      <div class="coverage-badges">
+        <span class="cov-badge">Amarat</span>
+        <span class="cov-badge">Hai Malakal</span>
+        <span class="cov-badge">Jebel</span>
+        <span class="cov-badge">Gudele</span>
+        <span class="cov-badge">Expanding...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANAGEMENT -->
+<section id="management">
+  <div class="mgmt-inner">
+    <div class="reveal">
+      <div class="section-tag">Management</div>
+      <h2>Led by Experience.<br>Driven by Vision.</h2>
+      <p class="lead">SalaamNet is led by a seasoned business executive with graduate-level training in engineering and management, and over two decades of experience in project design, implementation, and enterprise leadership across the United States and East Africa.</p>
+      <p class="lead" style="margin-bottom:0;">SalaamNet was founded with a clear vision: to build a solid local business group with the capacity to deliver across multiple sectors while creating meaningful employment opportunities for South Sudanese.</p>
+      <div class="mgmt-stats">
+        <div class="mgmt-stat">
+          <span class="mgmt-stat-num">21+</span>
+          <span class="mgmt-stat-label">Years Experience</span>
+        </div>
+        <div class="mgmt-stat">
+          <span class="mgmt-stat-num">US &amp; EA</span>
+          <span class="mgmt-stat-label">Operating History</span>
+        </div>
+        <div class="mgmt-stat">
+          <span class="mgmt-stat-num">2009</span>
+          <span class="mgmt-stat-label">Parent Co. Founded</span>
+        </div>
+      </div>
+    </div>
+    <div class="mgmt-card reveal">
+      <div class="mgmt-card-top">
+        <div class="mgmt-initials">PTM</div>
+        <div>
+          <div class="mgmt-name">Parek Toby Maduot</div>
+          <div class="mgmt-title">Managing Director, SalaamNet</div>
+        </div>
+      </div>
+      <div class="mgmt-card-body">
+        <div class="mgmt-cred">
+          <div class="mgmt-cred-dot"></div>
+          <div class="mgmt-cred-text">Founder &amp; Managing Director, Paragon Development Limited</div>
+        </div>
+        <div class="mgmt-cred">
+          <div class="mgmt-cred-dot"></div>
+          <div class="mgmt-cred-text">Former Chief Policy Adviser, Ministry of Finance &amp; Planning, South Sudan</div>
+        </div>
+        <div class="mgmt-cred">
+          <div class="mgmt-cred-dot"></div>
+          <div class="mgmt-cred-text">Director, Economic Development &amp; Regional Integration, ICGLR (12 member states)</div>
+        </div>
+        <div class="mgmt-cred">
+          <div class="mgmt-cred-dot"></div>
+          <div class="mgmt-cred-text">MSc International Management, University of Maryland · BSc Engineering &amp; Physical Sciences</div>
+        </div>
+        <div class="mgmt-cred">
+          <div class="mgmt-cred-dot"></div>
+          <div class="mgmt-cred-text">Doctoral Candidate — Infrastructure Management, Anglia Ruskin University</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <div class="section-tag">Contact Us</div>
+      <h2>Get Connected Today</h2>
+      <p class="lead">Whether you are a home user, business, or institution — we have a connectivity solution for you. Reach out and our team will be in touch within 24 hours.</p>
+      <div class="contact-links">
+        <a href="mailto:info@salaam-net.com" class="contact-link">
+          <div class="contact-link-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+          </div>
+          <div>
+            <span class="contact-link-label">Email</span>
+            <span class="contact-link-value">info@salaam-net.com</span>
+          </div>
+        </a>
+        <a href="tel:+211928210222" class="contact-link">
+          <div class="contact-link-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+          </div>
+          <div>
+            <span class="contact-link-label">Phone</span>
+            <span class="contact-link-value">+211 928 210 222</span>
+          </div>
+        </a>
+        <a href="#" class="contact-link">
+          <div class="contact-link-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+          </div>
+          <div>
+            <span class="contact-link-label">Address</span>
+            <span class="contact-link-value">Amarat, Juba, South Sudan</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <div class="form-title">Send us a message</div>
+      <form onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Your surname">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="you@email.com">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+211 ...">
+        </div>
+        <div class="form-group">
+          <label>Service Interest</label>
+          <select>
+            <option value="" disabled selected>Select a service</option>
+            <option>Home Broadband</option>
+            <option>Corporate Internet</option>
+            <option>Fiber Optic</option>
+            <option>City Wi-Fi / Hotspot</option>
+            <option>Cloud Computing</option>
+            <option>IT Network Security</option>
+            <option>ICT Training</option>
+            <option>General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="3" placeholder="Tell us about your connectivity needs…"></textarea>
+        </div>
+        <button type="submit" class="form-submit">
+          Send Message
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <svg style="height:32px; width:auto; display:block;" viewBox="0 0 220 58" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(4, 4)">
+        <path d="M0 20 Q20 0 40 20" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round" opacity="0.4"/>
+        <path d="M6 24 Q20 10 34 24" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round" opacity="0.7"/>
+        <path d="M12 28 Q20 20 28 28" fill="none" stroke="#E87722" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="20" cy="35" r="3.5" fill="#E87722"/>
+      </g>
+      <text x="52" y="22" font-family="Outfit, sans-serif" font-weight="700" font-size="20" fill="#FFFFFF" letter-spacing="1">SALAAM</text>
+      <text x="52" y="40" font-family="Outfit, sans-serif" font-weight="300" font-size="14" fill="rgba(255,255,255,0.5)" letter-spacing="4">NET</text>
+      <text x="54" y="52" font-family="Outfit, sans-serif" font-weight="400" font-size="7.5" fill="#E87722" letter-spacing="2.5">WI-FI FOR EVERYONE</text>
+    </svg>
+    <div class="footer-tagline">A subsidiary of Paragon Development Limited · paragonafrica.com</div>
+  </div>
+  <nav class="footer-nav">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#products">Products</a>
+    <a href="#coverage">Coverage</a>
+    <a href="#contact">Contact</a>
+    <a href="mailto:info@salaam-net.com">info@salaam-net.com</a>
+  </nav>
+  <div class="footer-copy">© 2025 SalaamNet · Juba, South Sudan</div>
+</footer>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
